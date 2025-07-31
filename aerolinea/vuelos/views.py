@@ -1,6 +1,8 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Avion, Vuelo, Pasajero, Asiento, Reserva, Boleto
 
@@ -97,3 +99,28 @@ class ReservaViewSet(viewsets.ModelViewSet):
 class BoletoViewSet(viewsets.ModelViewSet):
     queryset = Boleto.objects.all().select_related('reserva')
     serializer_class = BoletoSerializer
+
+
+class HomeView(TemplateView):
+    template_name = "landing.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        # Estadísticas impuestas por el desarrollador (hardcode)
+        ctx["stats"] = [
+            {"titulo": "Clientes contentos", "valor": "12.500+"},
+            {"titulo": "Km recorridos", "valor": "4.2M"},
+            {"titulo": "Flota de aviones", "valor": "18"},
+            {"titulo": "Vuelos completados", "valor": "32.400"},
+        ]
+        ctx["stats_descripcion"] = "Estadísticas internas estimadas por el equipo de desarrollo."
+        return ctx
+
+class ReservarView(LoginRequiredMixin, TemplateView):
+    template_name = "reservar.html"
+
+class MisReservasView(LoginRequiredMixin, TemplateView):
+    template_name = "mis_reservas.html"
+
+class SobreNosotrosView(TemplateView):
+    template_name = "sobre_nosotros.html"

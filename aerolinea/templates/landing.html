@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Aerolínea • Bienvenido{% endblock %}
+
+{% block content %}
+  <!-- Hero -->
+  <section class="py-5 text-center">
+    <h1 class="display-5 fw-bold">Tu viaje empieza aquí</h1>
+    <p class="lead text-muted">Reservá tus vuelos de forma simple y segura.</p>
+    {% if user.is_authenticated %}
+      <a href="{% url 'reservar' %}" class="btn btn-primary btn-lg mt-2">Reservar ahora</a>
+    {% else %}
+      <a href="{% url 'login' %}" class="btn btn-primary btn-lg mt-2">Iniciar sesión</a>
+    {% endif %}
+  </section>
+
+  <!-- Stats -->
+  <section class="py-4">
+    <div class="row g-3">
+      {% for item in stats %}
+        <div class="col-6 col-md-3">
+          <div class="card text-center shadow-sm">
+            <div class="card-body">
+              <div class="display-6 fw-bold">{{ item.valor }}</div>
+              <div class="text-muted">{{ item.titulo }}</div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% if stats_descripcion %}
+      <p class="text-muted small mt-2">{{ stats_descripcion }}</p>
+    {% endif %}
+  </section>
+
+  <!-- Features (opcional) -->
+  <section class="py-4">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Reservas rápidas</h5>
+            <p class="card-text">Elegí tu asiento y confirmá en minutos.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Flota moderna</h5>
+            <p class="card-text">Aviones eficientes y confortables para cada ruta.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Soporte 24/7</h5>
+            <p class="card-text">Estamos para ayudarte cuando lo necesites.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
