@@ -106,6 +106,13 @@ class Reserva(models.Model):
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     codigo_reserva = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
+    # restriccion para que un pasajero sea unico en un vuelo. teniendo en cuenta que si compra varios asientos tiene
+    # que cargar los datos de sus acompanantes, que serian dni unicos
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['vuelo', 'pasajero'], name='unico_pasajero_por_vuelo'),
+        ]
+
     def __str__(self):
         return f"Reserva {self.codigo_reserva}"
 
