@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Reserva confirmada ✅</h1>
+
+<p><strong>Código de reserva:</strong> {{ reserva.codigo }}</p>
+<p>Vuelo: {{ reserva.vuelo.origen }} → {{ reserva.vuelo.destino }}</p>
+<p>Asiento: {{ reserva.asiento_numero }}</p>
+<p>Pasajero: {{ reserva.nombre }}</p>
+<p>Email: {{ reserva.email }}</p>
+
+<a href="{% url 'lista_vuelos' %}">Volver a lista de vuelos</a>
+{% endblock %}

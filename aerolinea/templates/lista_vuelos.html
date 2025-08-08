@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Vuelos Disponibles</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Origen</th>
+            <th>Destino</th>
+            <th>Salida</th>
+            <th>Llegada</th>
+            <th>Estado</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for vuelo in vuelos %}
+        <tr>
+            <td>{{ vuelo.origen }}</td>
+            <td>{{ vuelo.destino }}</td>
+            <td>{{ vuelo.fecha_salida|date:"d/m/Y H:i" }}</td>
+            <td>{{ vuelo.fecha_llegada|date:"d/m/Y H:i" }}</td>
+            <td>{{ vuelo.get_estado_display }}</td>
+            <td>${{ vuelo.precio_base }}</td>
+            <td>
+                <a href="{% url 'seleccionar_asiento' vuelo.id %}">Seleccionar asiento</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7">No hay vuelos disponibles</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

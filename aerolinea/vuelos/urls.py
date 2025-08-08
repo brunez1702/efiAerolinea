@@ -2,7 +2,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
     AvionViewSet, VueloViewSet, PasajeroViewSet,
-    AsientoViewSet, ReservaViewSet, BoletoViewSet
+    AsientoViewSet, ReservaViewSet, BoletoViewSet, 
+    MiLoginView
 )
 
 
@@ -16,4 +17,5 @@ router.register(r'boletos', BoletoViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('login/', MiLoginView.as_view(), name='login'),
 ]

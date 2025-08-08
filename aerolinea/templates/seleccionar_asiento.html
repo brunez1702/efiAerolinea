@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Seleccionar asiento para el vuelo {{ vuelo.origen }} → {{ vuelo.destino }}</h1>
+
+<div class="asientos-grid">
+    {% for asiento in asientos %}
+        {% if asiento.disponible %}
+            <a href="{% url 'confirmar_reserva' vuelo.id asiento.numero %}" class="asiento libre">
+                {{ asiento.numero }}
+            </a>
+        {% else %}
+            <span class="asiento ocupado">{{ asiento.numero }}</span>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<style>
+.asientos-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 50px);
+    gap: 10px;
+}
+.asiento {
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+}
+.libre { background-color: green; }
+.ocupado { background-color: gray; cursor: not-allowed; }
+</style>
+{% endblock %}

@@ -5,7 +5,7 @@
   <!-- Hero -->
   <section class="py-5 text-center">
     <h1 class="display-5 fw-bold">Tu viaje empieza aquí</h1>
-    <p class="lead text-muted">Reservá tus vuelos de forma simple y segura.</p>
+    <p class="lead text-muted">Aerolinea todo lo que sube baja.</p>
     {% if user.is_authenticated %}
       <a href="{% url 'reservar' %}" class="btn btn-primary btn-lg mt-2">Reservar ahora</a>
     {% else %}
@@ -13,33 +13,17 @@
     {% endif %}
   </section>
 
-  <!-- Stats -->
-  <section class="py-4">
-    <div class="row g-3">
-      {% for item in stats %}
-        <div class="col-6 col-md-3">
-          <div class="card text-center shadow-sm">
-            <div class="card-body">
-              <div class="display-6 fw-bold">{{ item.valor }}</div>
-              <div class="text-muted">{{ item.titulo }}</div>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-    {% if stats_descripcion %}
-      <p class="text-muted small mt-2">{{ stats_descripcion }}</p>
-    {% endif %}
-  </section>
 
-  <!-- Features (opcional) -->
   <section class="py-4">
     <div class="row g-4">
       <div class="col-md-4">
         <div class="card h-100 shadow-sm">
           <div class="card-body">
-            <h5 class="card-title">Reservas rápidas</h5>
-            <p class="card-text">Elegí tu asiento y confirmá en minutos.</p>
+            <h5 class="card-title">La mejor forma de volar</h5>
+            <p class="card-text">
+              <span class="counter" data-target="25300000">0</span> clientes felices
+            </p>
+
           </div>
         </div>
       </div>
@@ -47,18 +31,45 @@
         <div class="card h-100 shadow-sm">
           <div class="card-body">
             <h5 class="card-title">Flota moderna</h5>
-            <p class="card-text">Aviones eficientes y confortables para cada ruta.</p>
+              <p class="card-text">
+                <span class="counter" data-target="17">0</span> aviones modernos y confortables para cada ruta.
+              </p>
           </div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="card h-100 shadow-sm">
           <div class="card-body">
-            <h5 class="card-title">Soporte 24/7</h5>
-            <p class="card-text">Estamos para ayudarte cuando lo necesites.</p>
+            <h5 class="card-title">Conexion mundial</h5>
+            <p class="card-text">
+              <span class="counter" data-target="73">0</span> países nos esperan
+            </p>
           </div>
         </div>
       </div>
     </div>
   </section>
+{% endblock %}
+{% block scripts %}
+<script>
+  const counters = document.querySelectorAll('.counter');
+  const speed = 100;
+
+  counters.forEach(counter => {
+    const updateCount = () => {
+      const target = +counter.getAttribute('data-target');
+      const count = +counter.innerText;
+      const increment = Math.ceil(target / speed);
+
+      if (count < target) {
+        counter.innerText = count + increment;
+        setTimeout(updateCount, 20);
+      } else {
+        counter.innerText = target.toLocaleString();
+      }
+    };
+
+    updateCount();
+  });
+</script>
 {% endblock %}

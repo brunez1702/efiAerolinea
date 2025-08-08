@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Confirmar reserva</h1>
+
+<p>Vuelo: {{ vuelo.origen }} → {{ vuelo.destino }}</p>
+<p>Asiento: {{ asiento_numero }}</p>
+<p>Precio: ${{ vuelo.precio_base }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <label for="nombre">Nombre completo:</label>
+    <input type="text" name="nombre" required>
+
+    <label for="email">Email:</label>
+    <input type="email" name="email" required>
+
+    <label for="documento">Documento:</label>
+    <input type="text" name="documento" required>
+
+    <button type="submit">Confirmar reserva</button>
+</form>
+{% endblock %}

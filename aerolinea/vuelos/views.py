@@ -3,6 +3,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import login
+from django.shortcuts import render, redirect
+from .forms import RegistroForm
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 
 from .models import Avion, Vuelo, Pasajero, Asiento, Reserva, Boleto
 
@@ -106,21 +114,101 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        # Estadísticas impuestas por el desarrollador (hardcode)
         ctx["stats"] = [
-            {"titulo": "Clientes contentos", "valor": "12.500+"},
-            {"titulo": "Km recorridos", "valor": "4.2M"},
-            {"titulo": "Flota de aviones", "valor": "18"},
-            {"titulo": "Vuelos completados", "valor": "32.400"},
+            {"titulo": "Clientes contentos", "valor": 12500},
+            {"titulo": "Km recorridos", "valor": 4200000},
+            {"titulo": "Flota de aviones", "valor": 18},
+            {"titulo": "Vuelos completados", "valor": 32400},
         ]
         ctx["stats_descripcion"] = "Estadísticas internas estimadas por el equipo de desarrollo."
         return ctx
 
 class ReservarView(LoginRequiredMixin, TemplateView):
-    template_name = "reservar.html"
+    template_name = "lista_vuelos.html"
 
 class MisReservasView(LoginRequiredMixin, TemplateView):
     template_name = "mis_reservas.html"
 
 class SobreNosotrosView(TemplateView):
     template_name = "sobre_nosotros.html"
+
+def registro_view(request):
+    if request.method == 'POST':
+        form = RegistroForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = RegistroForm()
+        return render(request, 'registro.html', {'form': form})
+    
+
+class MiLoginView(LoginView):
+    template_name = 'login.html'  # donde vos tenés tu template
+
+def logout_view(request):
+    logout(request)  # Cierra la sesión
+    return redirect('home')
+
+def lista_vuelos(request):
+    vuelos = Vuelo.objects.filter(estado=Vuelo.PROGRAMADO)
+    return render(request, "reservas/lista_vuelos.html", {"vuelos": vuelos})
+
+def seleccionar_asiento(request, vuelo_id):
+    vuelo = get_object_or_404(Vuelo, id=vuelo_id)
+    asientos = Asiento.objects.filter(avion=vuelo.avion, estado=Asiento.DISPONIBLE)
+    return render(request, "reservas/seleccionar_asiento.html", {
+        "vuelo": vuelo,
+        "asientos": asientos
+    })
+
+def confirmar_reserva(request, vuelo_id, asiento_id):
+    vuelo = get_object_or_404(Vuelo, id=vuelo_id)
+    asiento = get_object_or_404(Asiento, id=asiento_id, estado=Asiento.DISPONIBLE)
+
+    if request.method == "POST":
+        nombre = request.POST.get("nombre")
+        documento = request.POST.get("documento")
+        tipo_documento = request.POST.get("tipo_documento")
+        email = request.POST.get("email")
+        telefono = request.POST.get("telefono")
+        fecha_nacimiento = request.POST.get("fecha_nacimiento")
+
+        pasajero, creado = Pasajero.objects.get_or_create(
+            documento=documento,
+            defaults={
+                "nombre": nombre,
+                "tipo_documento": tipo_documento,
+                "email": email,
+                "telefono": telefono,
+                "fecha_nacimiento": fecha_nacimiento
+            }
+        )
+
+        # Crear reserva
+        reserva = Reserva.objects.create(
+            vuelo=vuelo,
+            pasajero=pasajero,
+            asiento=asiento,
+            precio=vuelo.precio_base
+        )
+
+        # Cambiar estado del asiento
+        asiento.estado = Asiento.RESERVADO
+        asiento.save()
+
+        messages.success(request, f"Reserva confirmada. Código: {reserva.codigo_reserva}")
+        return redirect("detalle_reserva", reserva_id=reserva.id)
+
+    return render(request, "reservas/confirmar_reserva.html", {
+        "vuelo": vuelo,
+        "asiento": asiento
+    })
+
+
+def detalle_reserva(request, reserva_id):
+    reserva = get_object_or_404(Reserva, id=reserva_id)
+    return render(request, "reservas/detalle_reserva.html", {"reserva": reserva})
