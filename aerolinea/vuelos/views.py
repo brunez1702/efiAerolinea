@@ -68,7 +68,6 @@ class AsientoViewSet(viewsets.ModelViewSet):
     queryset = Asiento.objects.all()
     serializer_class = AsientoSerializer
 
-
 class ReservaViewSet(viewsets.ModelViewSet):
     queryset = Reserva.objects.all().select_related('vuelo', 'pasajero', 'asiento')
     serializer_class = ReservaSerializer
@@ -165,13 +164,15 @@ def seleccionar_asiento(request, vuelo_id):
         "asientos": asientos
     })
 
-def confirmar_reserva(request, vuelo_id, asiento_id):
-    vuelo = get_object_or_404(Vuelo, id=vuelo_id)
-    asiento = get_object_or_404(Asiento, id=asiento_id, estado=Asiento.DISPONIBLE)
 
+def confirmar_reserva(request, vuelo_id, numero_asiento):
+    vuelo = get_object_or_404(Vuelo, id=vuelo_id)
+    asiento = get_object_or_404(Asiento, vuelo=vuelo, numero=numero_asiento)
+    
     if request.method == "POST":
-        nombre = request.POST.get("nombre")
+        # Obtener datos del pasajero desde el formulario
         documento = request.POST.get("documento")
+        nombre = request.POST.get("nombre")
         tipo_documento = request.POST.get("tipo_documento")
         email = request.POST.get("email")
         telefono = request.POST.get("telefono")
@@ -212,3 +213,32 @@ def confirmar_reserva(request, vuelo_id, asiento_id):
 def detalle_reserva(request, reserva_id):
     reserva = get_object_or_404(Reserva, id=reserva_id)
     return render(request, "reservas/detalle_reserva.html", {"reserva": reserva})
+
+
+#NUEVOO
+#
+#
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
+from django.conf import settings
+import qrcode
+from .models import Reserva
+
+@login_required
+def confirmar_reserva(request, codigo_reserva):
+    reserva = get_object_or_404(Reserva, codigo_reserva=codigo_reserva, pasajero=request.user)
+    return render(request, "confirmar_reserva.html", {"reserva": reserva})
+
+@login_required
+def descargar_boleto(request, reserva_id):
+    reserva = get_object_or_404(Reserva, id=reserva_id, pasajero=request.user)
+
+    # URL que irá en el QR
+    url_confirmacion = request.build_absolute_uri(
+        reverse('confirmar_reserva', args=[reserva.codigo_reserva])
+    )
+
+    # Generar QR con enlace
+    qr = qrcode.make(url_confirmacion)
+

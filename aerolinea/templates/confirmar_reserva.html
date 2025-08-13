@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+<!-- {% extends 'base.html' %}
 {% block content %}
 <h1>Confirmar reserva</h1>
 
@@ -19,4 +19,24 @@
 
     <button type="submit">Confirmar reserva</button>
 </form>
+{% endblock %} -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-success">✅ Reserva Confirmada</h2>
+    <div class="card p-4 mt-3 shadow">
+        <p><strong>Código de Reserva:</strong> {{ reserva.codigo_reserva }}</p>
+        <p><strong>Pasajero:</strong> {{ reserva.pasajero.username }}</p>
+        <p><strong>Vuelo:</strong> {{ reserva.vuelo.origen }} → {{ reserva.vuelo.destino }}</p>
+        <p><strong>Fecha salida:</strong> {{ reserva.vuelo.fecha_salida|date:"d/m/Y H:i" }}</p>
+        <p><strong>Asiento:</strong> {{ reserva.asiento.numero }}</p>
+        <p><strong>Estado:</strong> {{ reserva.estado }}</p>
+    </div>
+    <a href="{% url 'mis_reservas' %}" class="btn btn-primary mt-3">Volver a Mis Reservas</a>
+</div>
 {% endblock %}
+
+
