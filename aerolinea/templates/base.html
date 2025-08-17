@@ -5,17 +5,52 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Aerolínea{% endblock %}</title>
-    <!-- Bootstrap (CDN) -->
+
+    <!-- Bootstrap CSS -->
+     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      body {
+        background-color: #f0f4f8; /* Fondo general suave */
+      }
+      nav.navbar {
+        background-color: #003366 !important; /* Azul oscuro */
+      }
+      .navbar-brand {
+        background: white;
+        padding: 5px 10px;
+        border-radius: 8px;
+      }
+      .navbar-brand img {
+        border-radius: 6px;
+      }
+      .carousel-inner img {
+        height: 350px;
+        object-fit: cover;
+        border-radius: 15px;
+      }
+      .offer-card {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+      }
+      .offer-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      }
+    </style>
   </head>
-  <body class="bg-light">
-    <header class="border-bottom bg-white">
-      <nav class="navbar navbar-expand-lg container">
+  
+  <body>
+    <header class="border-bottom">
+      <nav class="navbar navbar-expand-lg px-4">
         <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
-          <img src="{% static 'img/logo.png' %}" alt="Logo" width="36" height="36" class="me-2">
-          <span class="fw-bold">Aerolínea</span>
+          <img src="{% static 'imagenes/logo.jpeg' %}" alt="Logo" width="80" height="80" class="me-2">
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+        <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div id="mainNav" class="collapse navbar-collapse">
@@ -25,13 +60,13 @@
                 <a class="btn btn-primary" href="{% url 'reservar' %}">Reservar</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'mis_reservas' %}">Mis reservas</a>
+                <a class="nav-link text-light" href="{% url 'mis_reservas' %}">Mis reservas</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'sobre_nosotros' %}">Sobre nosotros</a>
+                <a class="nav-link text-light" href="{% url 'sobre_nosotros' %}">Sobre nosotros</a>
               </li>
               <li class="nav-item">
-                <a class="btn btn-outline-secondary" href="{% url 'logout' %}">Salir</a>
+                <a class="btn btn-outline-light" href="{% url 'logout' %}">Salir</a>
               </li>
             {% else %}
               <li class="nav-item">
@@ -47,9 +82,11 @@
       {% block content %}{% endblock %}
     </main>
 
-    <footer class="border-top py-4 mt-5 text-center text-muted">
+    <footer class="border-top py-4 mt-5 text-center text-muted bg-light">
       <small>&copy; {% now "Y" %} Aerolínea Todo lo que sube baja • Todos los derechos reservados</small>
     </footer>
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     {% block scripts %}{% endblock %}
   </body>
