@@ -13,7 +13,7 @@ class Avion(models.Model):
     def __str__(self):
         return f"{self.modelo} ({self.capacidad} asientos)"
 
-
+    
 #2 vuelo
 class Vuelo(models.Model):
     PROGRAMADO = 1
@@ -75,7 +75,7 @@ class Asiento(models.Model):
         (RESERVADO, 'Reservado'),
         (OCUPADO, 'Ocupado'),
     ]
-    avion = models.ForeignKey(Avion, on_delete=models.CASCADE)
+    avion = models.ForeignKey(Avion, on_delete=models.CASCADE,  related_name="asientos")
     numero = models.CharField(max_length=5)
     fila = models.IntegerField()
     columna = models.CharField(max_length=1)
@@ -100,7 +100,7 @@ class Reserva(models.Model):
 
     vuelo = models.ForeignKey(Vuelo, on_delete=models.CASCADE)
     pasajero = models.ForeignKey(Pasajero, on_delete=models.CASCADE)
-    asiento = models.OneToOneField(Asiento, on_delete=models.CASCADE)
+    asiento = models.ForeignKey(Asiento, on_delete=models.CASCADE)
     estado = models.IntegerField(choices=ESTADO, default=RESERVADO)
     fecha_reserva = models.DateTimeField(auto_now_add=True)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
@@ -111,6 +111,7 @@ class Reserva(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['vuelo', 'pasajero'], name='unico_pasajero_por_vuelo'),
+            models.UniqueConstraint(fields=['vuelo', 'asiento'], name='unico_asiento_por_vuelo'),
         ]
 
     def __str__(self):
