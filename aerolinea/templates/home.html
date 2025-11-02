@@ -1,52 +1,41 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Inicio - Aerolínea{% endblock %}
-
 {% block content %}
-<h2 class="text-center mb-5 fw-bold">Bienvenido a Aerolínea</h2>
+<div class="container mt-4">
+    <!-- Carrusel -->
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{% static 'img/slide1.jpg' %}" class="d-block w-100" alt="Imagen 1">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'img/slide2.jpg' %}" class="d-block w-100" alt="Imagen 2">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'img/slide3.jpg' %}" class="d-block w-100" alt="Imagen 3">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+        </button>
+    </div>
 
-<div id="carouselHome" class="carousel slide mb-5" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="{% static 'imagenes/vuelointernacional.webp' %}" class="d-block w-100" alt="Vuelo internacional">
-        </div>
-        <div class="carousel-item">
-            <img src="{% static 'imagenes/vuelonacional.jpg' %}" class="d-block w-100" alt="Vuelo nacional">
-        </div>
-        <div class="carousel-item">
-            <img src="{% static 'imagenes/paquete.jpeg' %}" class="d-block w-100" alt="Paquete turístico">
-        </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselHome" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-        <span class="visually-hidden">Anterior</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselHome" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-        <span class="visually-hidden">Siguiente</span>
-    </button>
-</div>
-
-<div class="row text-center">
-    <div class="col-md-4 mb-4">
-        <div class="offer-card">
-            <h5>La mejor forma de volar</h5>
-            <p class="text-muted">25.300.000 clientes felices</p>
-        </div>
-    </div>
-    <div class="col-md-4 mb-4">
-        <div class="offer-card">
-            <h5>Flota moderna</h5>
-            <p class="text-muted">17 aviones modernos y confortables</p>
-        </div>
-    </div>
-    <div class="col-md-4 mb-4">
-        <div class="offer-card">
-            <h5>Conexión mundial</h5>
-            <p class="text-muted">73 países nos esperan</p>
-        </div>
+    <!-- Contenido adicional -->
+    <div class="mt-5 text-center">
+        <h2>Bienvenido a nuestra aerolínea</h2>
+        <p>Viaja con nosotros a los mejores destinos internacionales y nacionales.</p>
+        <a href="{% url 'reservar' %}" class="btn btn-primary">Reservar ahora</a>
     </div>
 </div>
 {% endblock %}
-

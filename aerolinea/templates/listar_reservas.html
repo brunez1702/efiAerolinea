@@ -1,0 +1,9 @@
+<h1>Reservas</h1>
+<a href="{% url 'crear_reserva' %}">Nueva reserva</a>
+<ul>
+{% for r in reservas %}
+    <li>{{ r.pasajero }} - {{ r.vuelo.codigo_vuelo }} - Asiento {{ r.asiento.numero }}
+        <a href="{% url 'eliminar_reserva' r.id %}">Eliminar</a>
+    </li>
+{% endfor %}
+</ul>

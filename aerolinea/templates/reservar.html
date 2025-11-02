@@ -1,6 +1,192 @@
-{% extends "base.html" %}
+<!-- {% extends "base.html" %}
 {% block title %}Reservar{% endblock %}
 {% block content %}
   <h2>Reservar</h2>
   <p>Página de reserva (en construcción).</p>
-{% endblock %}
+{% endblock %} -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Reservar Vuelo - Aerolínea{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">
+                <i class="fas fa-plane me-2"></i>Reservar Vuelo
+            </h2>
+        </div>
+    </div>
+    
+    {% if messages %}
+        <div class="row mb-4">
+            <div class="col-12">
+                {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if vuelos %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Vuelos Disponibles</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label for="pasajeros" class="form-label">
+                                        <i class="fas fa-users me-2"></i>Número de pasajeros
+                                    </label>
+                                    <select class="form-select" name="pasajeros" id="pasajeros" required>
+                                        <option value="">Seleccionar...</option>
+                                        <option value="1">1 pasajero</option>
+                                        <option value="2">2 pasajeros</option>
+                                        <option value="3">3 pasajeros</option>
+                                        <option value="4">4 pasajeros</option>
+                                        <option value="5">5 pasajeros</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                {% for vuelo in vuelos %}
+                                    <div class="col-md-6 col-lg-4 mb-4">
+                                                                                    <div class="card h-100 vuelo-card">
+                                                <div class="card-body">
+                                                    <div class="form-check mb-3">
+                                                        <input class="form-check-input" type="radio" name="vuelo_id" 
+                                                               value="{{ vuelo.id }}" id="vuelo{{ vuelo.id }}" required>
+                                                        <label class="form-check-label fw-bold" for="vuelo{{ vuelo.id }}">
+                                                            {{ vuelo.codigo_vuelo }}
+                                                        </label>
+                                                    </div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <div class="d-flex align-items-center mb-2">
+                                                            <i class="fas fa-plane-departure text-primary me-2"></i>
+                                                            <span class="fw-semibold">{{ vuelo.origen }}</span>
+                                                        </div>
+                                                        <div class="d-flex align-items-center mb-2">
+                                                            <i class="fas fa-plane-arrival text-success me-2"></i>
+                                                            <span class="fw-semibold">{{ vuelo.destino }}</span>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <small class="text-muted d-block">
+                                                            <i class="fas fa-calendar me-1"></i>
+                                                            Salida: {{ vuelo.fecha_salida|date:"d/m/Y H:i" }}
+                                                        </small>
+                                                        <small class="text-muted d-block">
+                                                            <i class="fas fa-calendar me-1"></i>
+                                                            Llegada: {{ vuelo.fecha_llegada|date:"d/m/Y H:i" }}
+                                                        </small>
+                                                    </div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <div class="d-flex justify-content-between">
+                                                            <span class="text-muted">Precio:</span>
+                                                            <span class="fw-bold text-success h5">${{ vuelo.precio }}</span>
+                                                        </div>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-chair me-1"></i>
+                                                            {{ vuelo.asientos_disponibles }} asientos disponibles
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <div class="row mt-4">
+                                    <div class="col-12 text-center">
+                                        <button type="submit" class="btn btn-success btn-lg">
+                                            <i class="fas fa-check me-2"></i>Confirmar Reserva
+                                        </button>
+                                        <a href="{% url 'home' %}" class="btn btn-secondary btn-lg ms-3">
+                                            <i class="fas fa-times me-2"></i>Cancelar
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-warning text-center">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <h5>No hay vuelos disponibles</h5>
+                        <p class="mb-0">Actualmente no tenemos vuelos programados. Por favor, vuelve más tarde.</p>
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="{% url 'home' %}" class="btn btn-primary">
+                            <i class="fas fa-home me-2"></i>Volver al Inicio
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    {% endblock %}
+
+    {% block scripts %}
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+    .vuelo-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        cursor: pointer;
+    }
+
+    .vuelo-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+
+    .form-check-input:checked + .form-check-label {
+        color: #0d6efd;
+    }
+
+    .vuelo-card .form-check-input:checked {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+    </style>
+
+    <script>
+    // Hacer clic en toda la tarjeta para seleccionar el vuelo
+    document.addEventListener('DOMContentLoaded', function() {
+        const vueloCards = document.querySelectorAll('.vuelo-card');
+        
+        vueloCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                    // Remover selección visual de otras tarjetas
+                    vueloCards.forEach(c => c.classList.remove('border-primary'));
+                    // Agregar selección visual a la tarjeta actual
+                    this.classList.add('border-primary');
+                }
+            });
+        });
+    });
+    </script>
+    {% endblock %}

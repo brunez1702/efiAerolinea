@@ -1,0 +1,4 @@
+def eliminar_reserva(request, reserva_id):
+    reserva = Reserva.objects.get(id=reserva_id)
+    reserva.delete()
+    return redirect("lista_reservas")

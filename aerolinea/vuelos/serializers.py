@@ -1,5 +1,15 @@
 from rest_framework import serializers
 from .models import Avion, Vuelo, Pasajero, Asiento, Reserva, Boleto
+from .models import Reserva
+
+
+
+class ReservaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reserva
+        fields = '__all__'
+
+
 
 class AvionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -7,17 +17,15 @@ class AvionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class VueloSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Vuelo
-        fields = '__all__'
+     avion = AvionSerializer(read_only=True)
 
-    def validate(self, data):
-        fecha_salida = data.get('fecha_salida') or getattr(self.instance, 'fecha_salida', None)
-        fecha_llegada = data.get('fecha_llegada') or getattr(self.instance, 'fecha_llegada', None)
+def validate(self, data):
+    fecha_salida = data.get('fecha_salida') or getattr(self.instance, 'fecha_salida', None)
+    fecha_llegada = data.get('fecha_llegada') or getattr(self.instance, 'fecha_llegada', None)
 
-        if fecha_salida and fecha_llegada and fecha_llegada <= fecha_salida:
+    if fecha_salida and fecha_llegada and fecha_llegada <= fecha_salida:
             raise serializers.ValidationError("La fecha_llegada debe ser posterior a fecha_salida.")
-        return data
+    return data
 
 
 class PasajeroSerializer(serializers.ModelSerializer):

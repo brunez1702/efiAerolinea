@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Crear Cuenta</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">Usuario</label>
+            <input type="text" class="form-control" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Correo electrónico</label>
+            <input type="email" class="form-control" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrarse</button>
+    </form>
+</div>
+{% endblock %}
+
+
+
+
+<h1>Nueva Reserva</h1>
+{% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
+<form method="POST">{% csrf_token %}
+    <label>Vuelo:</label>
+    <select name="vuelo">{% for v in vuelos %}<option value="{{ v.id }}">{{ v.codigo_vuelo }}</option>{% endfor %}</select><br>
+
+    <label>Asiento:</label>
+    <select name="asiento">{% for a in asientos %}<option value="{{ a.id }}">{{ a.numero }}</option>{% endfor %}</select><br>
+
+    <label>Pasajero:</label>
+    <select name="pasajero">{% for p in pasajeros %}<option value="{{ p.id }}">{{ p.nombre }}</option>{% endfor %}</select><br>
+
+    <button type="submit">Guardar</button>
+</form>
