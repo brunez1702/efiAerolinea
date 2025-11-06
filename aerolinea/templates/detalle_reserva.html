@@ -10,3 +10,29 @@
 
 <a href="{% url 'lista_vuelos' %}">Volver a lista de vuelos</a>
 {% endblock %}
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reservas</title>
+</head>
+<body>
+    <h1>Lista de Reservas</h1>
+
+    <a href="{% url 'crear_reserva' %}">➕ Nueva Reserva</a>
+
+    <ul>
+    {% for r in reservas %}
+        <li>
+            {{ r.pasajero }} - Vuelo {{ r.vuelo.codigo_vuelo }} - Asiento {{ r.asiento.numero }}
+            <a href="{% url 'eliminar_reserva' r.id %}">❌ Eliminar</a>
+        </li>
+    {% empty %}
+        <li>No hay reservas registradas.</li>
+    {% endfor %}
+    </ul>
+
+</body>
+</html>
