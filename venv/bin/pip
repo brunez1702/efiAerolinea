@@ -1,4 +1,4 @@
-#!/home/agos/INGENIERIASOFTWARE.AGOS/Efinuevo/efiAerolinea/venv/bin/python3
+#!/home/bruno/Documentos/Ingenieria/efiAerolinea/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

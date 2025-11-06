@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Reserva
 from .forms import RegistroForm, ReservaForm
+from .serializers import ReservaSerializer
+
 
 from rest_framework import viewsets, permissions
 from .models import Vuelo, Avion, Asiento, Pasajero

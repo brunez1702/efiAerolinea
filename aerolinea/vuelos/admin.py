@@ -5,7 +5,7 @@ from .models import Vuelo, Reserva
 
 @admin.register(Vuelo)
 class VueloAdmin(admin.ModelAdmin):
-    list_display = ['codigo_vuelo', 'origen', 'destino', 'fecha_salida', 'precio', 'asientos_disponibles']
+    list_display = ['codigo_vuelo', 'origen', 'destino', 'fecha_salida', 'precio_base', 'asientos_disponibles']
     list_filter = ['origen', 'destino', 'fecha_salida']
     search_fields = ['codigo_vuelo', 'origen', 'destino']
     ordering = ['fecha_salida']
@@ -19,9 +19,13 @@ class VueloAdmin(admin.ModelAdmin):
             'fields': ('fecha_salida', 'fecha_llegada')
         }),
         ('Detalles Comerciales', {
-            'fields': ('precio', 'asientos_disponibles')
+            'fields': ('precio_base', 'asientos_disponibles')
         }),
     )
+
+    def mostrar_precio(self, obj):
+        return getattr(obj, 'precio', '—')
+    mostrar_precio.short_description = "Precio"
 
 @admin.register(Reserva)
 class ReservaAdmin(admin.ModelAdmin):
@@ -47,3 +51,7 @@ class ReservaAdmin(admin.ModelAdmin):
     def total_precio(self, obj):
         return f"${obj.total_precio()}"
     total_precio.short_description = "Total a Pagar"
+
+    def numero_pasajeros(self, obj):
+        return obj.pasajeros.count()  
+    numero_pasajeros.short_description = "N° Pasajeros"
