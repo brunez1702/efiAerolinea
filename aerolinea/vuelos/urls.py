@@ -4,12 +4,8 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.contrib import admin
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
-from . import views
-from .views import AvionViewSet, AsientoViewSet, VueloViewSet, PasajeroViewSet, ReservaViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
+from .views import HomeView, RegistroView, LoginView, LogoutView, ReservaViewSet, MisReservasView, SobreNosotrosView, AvionViewSet, AsientoViewSet, VueloViewSet, PasajeroViewSet, ReservaViewSet
 
 # --- Router principal ---
 router = DefaultRouter()
@@ -33,13 +29,13 @@ schema_view = get_schema_view(
 
 # --- URLs ---
 urlpatterns = [
-    path("", views.home, name="home"),
-    path("registro/", views.registro, name="registro"),
-    path("login/", views.iniciar_sesion, name="login"),
-    path("logout/", views.cerrar_sesion, name="logout"),
-    path("reservar/", views.reservar, name="reservar"),
-    path("mis-reservas/", views.mis_reservas, name="mis_reservas"),
-    path("sobre-nosotros/", views.sobre_nosotros, name="sobre_nosotros"),
+    path("", HomeView.as_view(), name="home"),
+    path("registro/", RegistroView.as_view(), name="registro"),
+    path("login/", LoginView.as_view(), name="login"),
+    path("logout/", LogoutView.as_view(), name="logout"),
+    path("reservar/", ReservaViewSet.as_view(), name="reservar"),
+    path("mis-reservas/", MisReservasView.as_view(), name="mis_reservas"),
+    path("sobre-nosotros/", SobreNosotrosView.as_view(), name="sobre_nosotros"),
 
     # Admin y API
     #path("admin/", admin.site.urls),
